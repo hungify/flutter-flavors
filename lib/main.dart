@@ -1,3 +1,4 @@
+import 'package:flavors_example/interactable_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -31,7 +32,7 @@ void main() {
     default:
       FlavorConfig.appFlavor = Flavor.unknown;
   }
-  runApp(const MyApp());
+  runApp(const InteractiveSvgViewer());
 }
 
 class MyApp extends StatelessWidget {
@@ -126,6 +127,63 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class InteractiveSvgViewer extends StatefulWidget {
+  const InteractiveSvgViewer({super.key});
+  @override
+  State<InteractiveSvgViewer> createState() => _InteractiveSvgViewerState();
+}
+
+class _InteractiveSvgViewerState extends State<InteractiveSvgViewer> {
+  String? currentDistrict;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Svg interaction')),
+      body: Column(
+        children: [
+          if (currentDistrict != null) Text('Selected: $currentDistrict'),
+          Expanded(
+            child: InteractiveViewer(
+              scaleEnabled: true,
+              panEnabled: true,
+              constrained: true,
+              child: InteractableSvg(
+                svgAddress: "assets/body.svg",
+                onChanged: (regionId) {
+                  setState(() {
+                    currentDistrict = regionId;
+                  });
+                },
+                width: double.infinity,
+                height: double.infinity,
+                toggleEnable: true,
+                isMultiSelectable: false,
+                dotColor: Colors.black,
+                selectedColor: Colors.red.withOpacity(0.5),
+                strokeColor: Colors.blue,
+                unSelectableId: "bg",
+                centerDotEnable: true,
+                centerTextEnable: true,
+                strokeWidth: 2.0,
+                centerTextStyle: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
